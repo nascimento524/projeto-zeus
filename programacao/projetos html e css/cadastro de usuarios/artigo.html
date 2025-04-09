@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="artigo.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    
+
+  <main class="container">
+    <h2 class="mt-5">Cadastro de Usuário</h2>
+    <form id="formulario">
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="dataNascimento">Data de Nascimento:</label>
+            <input type="date" id="dataNascimento" class="form-control" required>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="cadastrarUsuario()">Cadastrar</button>
+    </form>
+  </main>
+
+  <h2 class="Cadastrados" id="dadosCadastrados">Dados cadastrados:</h2>
+
+  <table id="userTable" class="table">
+      <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Senha</th>
+          <th>CPF</th>
+          <th>Endereço</th>
+          <th>Data de Nascimento</th>
+          <th>Ações</th>
+      </tr>
+  </table>
+
+  <div id="formularioEdicao" style="display: none;">
+      <h2>Editar Usuário</h2>
+      <div class="form-group">
+          <label for="editNome">Nome:</label>
+          <input type="text" id="editNome" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+          <label for="editEmail">Email:</label>
+          <input type="email" id="editEmail" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+          <label for="editSenha">Senha:</label>
+          <input type="password" id="editSenha" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+          <label for="editCPF">CPF:</label>
+          <input type="text" id="editCPF" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+          <label for="editEndereco">Endereço:</label>
+          <input type="text" id="editEndereco" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+          <label for="editDataNascimento">Data de Nascimento:</label>
+          <input type="date" id="editDataNascimento" class="form-control" required>
+      </div>
+
+      <button type="button" id="salvarEdicao" class="btn btn-success" onclick="salvarEdicao()">Salvar</button>
+      <button type="button" id="cancelarEdicao" class="btn btn-secondary" onclick="cancelarEdicao()">Cancelar</button>
+  </div>
+
+  <script>
+    var selectedRow = null;
+
+    function onEdit(row) {
+        selectedRow = row;
+        var cells = row.getElementsByTagName("td");
+        document.getElementById("editNome").value = cells[0].innerText;
+        document.getElementById("editEmail").value = cells[1].innerText;
+        document.getElementById("editSenha").value = cells[2].innerText;
+        document.getElementById("editCPF").value = cells[3].innerText;
+        document.getElementById("editEndereco").value = cells[4].innerText;
+        document.getElementById("editDataNascimento").value = cells[5].innerText;
+        formularioEdicao.style.display = "block";
+    }
+
+    function cancelarEdicao() {
+        selectedRow = null;
+        formularioEdicao.style.display = "none";
+    }
+
+    function salvarEdicao() {
+        if (selectedRow) {
+            var cells = selectedRow.getElementsByTagName("td");
+            cells[0].innerText = document.getElementById("editNome").value;
+            cells[1].innerText = document.getElementById("editEmail").value;
+            cells[2].innerText = document.getElementById("editSenha").value;
+            cells[3].innerText = document.getElementById("editCPF").value;
+            cells[4].innerText = document.getElementById("editEndereco").value;
+            cells[5].innerText = document.getElementById("editDataNascimento").value;
+            selectedRow = null;
+            formularioEdicao.style.display = "none";
+        }
+    }
+
+    function onDelete(row) {
+        if (confirm("Tem certeza de que deseja excluir este usuário?")) {
+            document.getElementById("userTable").deleteRow(row.rowIndex);
+            formularioEdicao.style.display = "none";
+        }
+    }
+
+    function cadastrarUsuario() {
+        var nome = document.getElementById("nome").value;
+        var email = document.getElementById("email").value;
+        var senha = document.getElementById("senha").value;
+        var cpf = document.getElementById("cpf").value;
+        var endereco = document.getElementById("endereco").value;
+        var dataNascimento = document.getElementById("dataNascimento").value;
+
+        if (selectedRow) {
+            salvarEdicao();
+        } else {
+            var tabela = document.getElementById("userTable");
+            var novaLinha = tabela.insertRow(-1);
+
+            var colunaNome = novaLinha.insertCell(0);
+            var colunaEmail = novaLinha.insertCell(1);
+            var colunaSenha = novaLinha.insertCell(2);
+            var colunaCPF = novaLinha.insertCell(3);
+            var colunaEndereco = novaLinha.insertCell(4);
+            var colunaDataNascimento = novaLinha.insertCell(5);
+            var colunaAcoes = novaLinha.insertCell(6);
+
+            colunaNome.innerHTML = nome;
+            colunaEmail.innerHTML = email;
+            colunaSenha.innerHTML = senha;
+            colunaCPF.innerHTML = cpf;
+            colunaEndereco.innerHTML = endereco;
+            colunaDataNascimento.innerHTML = dataNascimento;
+
+            var botaoEditar = document.createElement("button");
+            botaoEditar.innerHTML = "Editar";
+            botaoEditar.addEventListener("click", function () {
+                onEdit(novaLinha);
+            });
+
+            var botaoExcluir = document.createElement("button");
+            botaoExcluir.innerHTML = "Excluir";
+            botaoExcluir.addEventListener("click", function () {
+                onDelete(novaLinha);
+            });
+
+            colunaAcoes.appendChild(botaoEditar);
+            colunaAcoes.appendChild(botaoExcluir);
+
+            // Limpar os campos de cadastro
+            document.getElementById("nome").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("senha").value = "";
+            document.getElementById("cpf").value = "";
+            document.getElementById("endereco").value = "";
+            document.getElementById("dataNascimento").value = "";
+
+            formularioEdicao.style.display = "none";
+        }
+    }
+  </script>
+  <footer>TABELA DE USUARIOS</footer>
+  <script>
+    // Função que desce até os dados
+    function scrollParaDados() {
+      const destino = document.getElementById('dadosCadastrados');
+      if (destino) {
+        destino.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  
+    // Detecta o clique no botão "Cadastrar"
+    document.addEventListener('DOMContentLoaded', function () {
+      const botaoCadastrar = document.querySelector('button[name="cadastrar"]');
+      if (botaoCadastrar) {
+        botaoCadastrar.addEventListener('click', function () {
+          // Aguarda o PHP recarregar e depois rola
+          setTimeout(() => {
+            scrollParaDados();
+          }, 300); // tempo pra garantir que a tabela carregou
+        });
+      }
+    });
+  </script>
+  
+</body>
+</html>
